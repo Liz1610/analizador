@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Analizador de Logs</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        h1 { color: #444; }
+        table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+        th, td { border: 1px solid #ccc; padding: 8px; }
+        th { background-color: #f2f2f2; }
+        .error { color: red; }
+        .warning { color: orange; }
+        .info { color: #0074d9; }
+        .fail { color: brown; }
+        .resumen { margin-top: 30px; }
+    </style>
+</head>
+<body>
+    <h1>Analizador de Logs - Linux</h1>
+
+    <form method="POST">
+        <label for="log_tipo">Selecciona el log:</label>
+        <select name="log_tipo" id="log_tipo">
+            {% for key, path in logs_disponibles.items() %}
+                <option value="{{ key }}" {% if log_tipo == key %}selected{% endif %}>{{ key }}</option>
+            {% endfor %}
+        </select><br><br>
+
+        <label for="filtro">Filtrar por palabra clave (mensaje, IP, etc):</label><br>
+        <input type="text" name="filtro" size="40" value="{{ request.form.filtro or '' }}"><br><br>
+
+        <button type="submit">Buscar</button>
+    </form>
+
+    {% if log_data %}
+        <h2>Resultados:</h2>
+        <table>
+            <tr>
+                <th>Tipo</th>
+                <th>Mensaje</th>
+            </tr>
+            {% for entry in log_data %}
+            <tr>
+                <td class="{{ entry.tipo|lower }}">{{ entry.tipo }}</td>
+                <td><pre>{{ entry.texto }}</pre></td>
+            </tr>
+            {% endfor %}
+        </table>
+
+        <div class="resumen">
+            <h3>Resumen por tipo:</h3>
+            <ul>
+                <li>Errores: {{ resumen.errores }}</li>
+                <li>Advertencias: {{ resumen.advertencias }}</li>
+                <li>Fallos: {{ resumen.fallos }}</li>
+                <li>Info: {{ resumen.info }}</li>
+            </ul>
+
+            <h3>Top IPs más frecuentes:</h3>
+            <ul>
+                {% for ip, count in resumen.ip_frecuentes %}
+                    <li>{{ ip }}: {{ count }} eventos</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <form method="POST" action="/reporte">
+            <input type="hidden" name="log_tipo" value="{{ log_tipo }}">
+            <input type="hidden" name="filtro" value="{{ request.form.filtro }}">
+            <button type="submit">Generar reporte PDF (simulado)</button>
+        </form>
+    {% endif %}
+</body>
+</html>
+

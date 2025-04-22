@@ -1,0 +1,19 @@
+body {
+    font-family: sans-serif;
+    margin: 40px;
+    background: #f8f8f8;
+}
+
+h1 {
+    color: #333;
+}
+
+.log-box {
+    border: 1px solid #ccc;
+    background: #fff;
+    padding: 10px;
+    max-height: 400px;
+    overflow-y: scroll;
+    white-space: pre-wrap;
+    box-shadow: 0 0 5px rgba(0,0,0,0.1);
+}
