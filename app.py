@@ -22,7 +22,7 @@ def clasificar_linea(linea):
     elif "fail" in linea.lower() or "denied" in linea.lower():
         return ("Fallo", linea)
     else:
-        return ("Info", linea)
+        return ("Informacion", linea)
 
 # Extrae la IP si existe
 def extraer_ip(linea):
